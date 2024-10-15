@@ -1,0 +1,40 @@
+name: Run Blazemeter Tests
+
+on:
+  push:
+    branches:
+      - develop  # Adjust to your default or desired branches
+
+jobs:
+  run-blazemeter-test:
+    runs-on: ubuntu-latest
+    env:
+      TEST_ID: "75027386"  # Non-sensitive data
+      CONTINUE_PIPELINE: "false"
+      SHOW_TAIL_LOG: "false"
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3  # Latest stable version
+
+      - name: Display Non-Sensitive Variables
+        run: |
+          echo "Test ID: $TEST_ID"
+          echo "Continue Pipeline: $CONTINUE_PIPELINE"
+          echo "Show Tail Log: $SHOW_TAIL_LOG"
+
+      - name: Run Blazemeter Test
+        uses: BlazeRunner-BZR/Github-Action@v8.1
+        id: run-test
+        with:
+          # apiKey: ${{ secrets.BLAZERUNDEMO }}          # Sourced from GitHub Secrets
+          # apiSecret: ${{ secrets.API_SECRET }}    # Sourced from GitHub Secrets
+          testID: ${{ env.TEST_ID }}
+          continuePipeline: ${{ env.CONTINUE_PIPELINE }}
+          showTailLog: ${{ env.SHOW_TAIL_LOG }}
+
+      - name: Post-Test Actions
+        run: |
+          echo "Blazemeter Test Completed."
+          # Example: Check the output of the run-test step if available
+          # echo "Test ID: ${{ steps.run-test.outputs.testId }}"
+        # Ensure that the 'run-test' step sets 'testId' as an output if you want to use it here
